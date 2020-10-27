@@ -35,7 +35,8 @@
 #include <Wire.h>  // Only needed for Arduino 1.6.5 and earlier
 #include "heltec.h" // alias for `#include "SSD1306Wire.h"`
 #include <ArduinoJson.h>
-// #include "images.h"
+
+#include "wifiSettings.h"
 
 #ifndef STASSID
 #define STASSID "***"
