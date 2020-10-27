@@ -119,21 +119,11 @@ void handleNotFound() {
 
 int StrToHex(char* instr)
 {
-  char charAtOffset[3] = {0x00,0x00,0x00};
-  int index = 0;
-  if(instr[1] == 'x' || instr[1] == 'X')
-    index = 2;
   Serial.print("Original value: ");
   Serial.print(instr);
   Serial.print("/");
   Serial.println(strtol(instr, 0, 16));
-  charAtOffset[0] = instr[index];
-  charAtOffset[1] = instr[index+1];
-  Serial.print("Output value: ");
-  Serial.println(charAtOffset);
-  Serial.print("/");
-  Serial.println(strtol(charAtOffset, 0, 16));
-  return (int) strtol(charAtOffset, 0, 16);
+  return (int) strtol(instr, 0, 16);
 }
 
 void ConvertStringToData(const char* imageData, int imageSize){
@@ -146,17 +136,19 @@ void ConvertStringToData(const char* imageData, int imageSize){
   // walk through the image data and convert each hex value to 
   for(int n=0; n<nSize;n++){
     if(imageData[n] == ','){
-      TImage.imageData[imageOffset++] = StrToHex(buffer);
+      Serial.print("Original value: ");
+      Serial.print(buffer);
+      Serial.print("/");
+      Serial.println(strtol(buffer, 0, 16));
+      
+      TImage.imageData[imageOffset++] = (int) strtol(instr, 0, 16);      
       index = 0; // restart the buffer
       // Flush char buffer real quick
       buffer[0] = buffer[1] = buffer[2] = buffer[3] = buffer[4];
     }
     else{
       if(!isWhitespace(imageData[n])){
-        if(index < 3){
-          buffer[index++] = imageData[n];
-        }
-        // else {}// We are in an error state, ignore for now
+        buffer[index++] = imageData[n];
       }
     }
   }
