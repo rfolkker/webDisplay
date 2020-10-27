@@ -130,21 +130,22 @@ void ConvertStringToData(const char* imageData, int imageSize){
   int nSize = strlen(imageData);
   int index = 0;
   int imageOffset = 0;
-  char buffer[5]; // Big enough to hold an 0x## value
-  buffer[0] = buffer[1] = buffer[2] = buffer[3] = buffer[4] = 0x00;
+  char buffer[10]; // Big enough to hold an 0x## value
+  for(int n=0;n<10;buffer[n++] = 0x00);
   
   // walk through the image data and convert each hex value to 
   for(int n=0; n<nSize;n++){
     if(imageData[n] == ','){
-      Serial.print("Original value: ");
-      Serial.print(buffer);
-      Serial.print("/");
-      Serial.println(strtol(buffer, 0, 16));
+      // Debug text to clean-up hex to int parsing errors
+      // Serial.print("Original value: ");
+      // Serial.print(buffer);
+      // Serial.print("/");
+      // Serial.println(strtol(buffer, 0, 16));
       
-      TImage.imageData[imageOffset++] = (int) strtol(instr, 0, 16);      
+      TImage.imageData[imageOffset++] = (int) strtol(buffer, 0, 16);      
       index = 0; // restart the buffer
       // Flush char buffer real quick
-      buffer[0] = buffer[1] = buffer[2] = buffer[3] = buffer[4];
+      for(int n=0;n<10;buffer[n++] = 0x00);
     }
     else{
       if(!isWhitespace(imageData[n])){
@@ -153,7 +154,7 @@ void ConvertStringToData(const char* imageData, int imageSize){
     }
   }
   // Copy the last bit
-  TImage.imageData[imageOffset] = StrToHex(buffer);
+  TImage.imageData[imageOffset] = (int) strtol(buffer, 0, 16);
   // That should do it
 }
 
